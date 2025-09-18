@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Dorks for Bug Bounty</title>
+    <title>Bug Bounty Hunter's Toolkit</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
@@ -58,6 +58,101 @@
         .hover-lift:hover {
             transform: translateY(-2px);
         }
+        .tab-button {
+            background: rgba(51, 65, 85, 0.3);
+            color: #cbd5e1;
+            border: 1px solid rgba(71, 85, 105, 0.5);
+        }
+        .tab-button.active {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border-color: #3b82f6;
+        }
+        .tab-button:hover {
+            background: rgba(71, 85, 105, 0.5);
+            border-color: #64748b;
+        }
+        .tab-button.active:hover {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+        }
+        .tab-content {
+            animation: fadeIn 0.5s ease-out;
+        }
+        .dork-btn, .param-btn {
+            padding: 12px 16px;
+            border: 1px solid;
+            border-radius: 8px;
+            background: rgba(51, 65, 85, 0.3);
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+        .dork-btn:hover, .param-btn:hover {
+            transform: translateY(-1px);
+            background: rgba(71, 85, 105, 0.5);
+        }
+        .tool-category, .vuln-category {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(75, 85, 99, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .tool-link, .vuln-link, .wordlist-link {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: rgba(51, 65, 85, 0.3);
+            border: 1px solid rgba(75, 85, 99, 0.3);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .tool-link:hover, .vuln-link:hover, .wordlist-link:hover {
+            background: rgba(71, 85, 105, 0.5);
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-2px);
+        }
+        .tool-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+        .tool-link h4, .vuln-link h4, .wordlist-link h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .tool-link p, .vuln-link p, .wordlist-link p {
+            font-size: 14px;
+            color: #94a3b8;
+            margin: 0;
+        }
+        .payload-item {
+            background: rgba(51, 65, 85, 0.3);
+            border: 1px solid rgba(75, 85, 99, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .payload-item:hover {
+            background: rgba(71, 85, 105, 0.5);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+        .payload-item code {
+            color: #10b981;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen font-inter text-white">
@@ -66,115 +161,745 @@
 
 <div class="relative z-10 container mx-auto px-4 py-8">
     <!-- Header -->
-    <div class="text-center mb-12 animate-fade-in">
-        <h1 class="text-6xl font-bold mb-6 gradient-text">
-            Google Dorks
+    <div class="text-center mb-8 animate-fade-in">
+        <h1 class="text-5xl font-bold mb-4 gradient-text">
+            Bug Bounty Hunter's Toolkit
         </h1>
-        <p class="text-2xl text-slate-300 mb-4">Bug Bounty Hunter's Toolkit</p>
+        <p class="text-xl text-slate-300 mb-4">Complete Security Testing Arsenal</p>
         <div class="w-32 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
     </div>
 
+    <!-- Navigation Tabs -->
+    <div class="max-w-6xl mx-auto mb-8">
+        <div class="glass-effect cyber-border rounded-2xl p-2">
+            <nav class="flex flex-wrap justify-center gap-2" role="tablist">
+                <button onclick="showTab('google-dorks')" id="tab-google-dorks" 
+                        class="tab-button active px-6 py-3 rounded-lg font-medium transition-all duration-300 text-sm lg:text-base">
+                    🔍 Google Dorks
+                </button>
+                <button onclick="showTab('recon-tools')" id="tab-recon-tools"
+                        class="tab-button px-6 py-3 rounded-lg font-medium transition-all duration-300 text-sm lg:text-base">
+                    🕵️ Recon Tools
+                </button>
+                <button onclick="showTab('payloads')" id="tab-payloads"
+                        class="tab-button px-6 py-3 rounded-lg font-medium transition-all duration-300 text-sm lg:text-base">
+                    💉 Payloads
+                </button>
+                <button onclick="showTab('encoders')" id="tab-encoders"
+                        class="tab-button px-6 py-3 rounded-lg font-medium transition-all duration-300 text-sm lg:text-base">
+                    🔧 Encoders
+                </button>
+                <button onclick="showTab('vuln-db')" id="tab-vuln-db"
+                        class="tab-button px-6 py-3 rounded-lg font-medium transition-all duration-300 text-sm lg:text-base">
+                    🗄️ Vuln DB
+                </button>
+            </nav>
+        </div>
+    </div>
+
     <!-- Social Links -->
-    <div class="flex justify-center gap-6 mb-12 animate-slide-up">
+    <div class="flex justify-center gap-6 mb-8 animate-slide-up">
         <a href="https://github.com/muhammeddeliavci" target="_blank"
            class="glass-effect cyber-border px-6 py-3 rounded-lg hover-lift hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 group">
             <span class="text-purple-400 group-hover:text-purple-300">📚 GitHub</span>
         </a>
     </div>
 
-    <!-- Domain Input -->
-    <div class="max-w-2xl mx-auto mb-12 animate-slide-up">
-        <div class="glass-effect cyber-border rounded-2xl p-8">
-            <label for="domainInput" class="block text-lg font-semibold mb-4 text-center text-slate-300">
-                🎯 Target Domain
-            </label>
-            <div class="relative">
-                <input
-                        type="text"
-                        id="domainInput"
-                        placeholder="example.com, subdomain.com"
-                        class="w-full px-6 py-4 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/25 transition-all duration-300"
-                        oninput="updateDomain()"
-                >
-                <div class="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-sm text-slate-400 mt-3 text-center">
-                💡 Separate multiple domains with commas
-            </p>
-        </div>
-    </div>
-
-    <!-- Stats Dashboard -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto animate-slide-up">
-        <div class="glass-effect cyber-border rounded-xl p-6 text-center hover-lift">
-            <div class="text-3xl font-bold text-blue-400 mb-2" id="totalDorks">0</div>
-            <div class="text-slate-300">Total Dorks</div>
-        </div>
-        <div class="glass-effect cyber-border rounded-xl p-6 text-center hover-lift">
-            <div class="text-3xl font-bold text-green-400 mb-2" id="categories">0</div>
-            <div class="text-slate-300">Categories</div>
-        </div>
-        <div class="glass-effect cyber-border rounded-xl p-6 text-center hover-lift">
-            <div class="text-3xl font-bold text-purple-400 mb-2">∞</div>
-            <div class="text-slate-300">Possibilities</div>
-        </div>
-    </div>
-
-    <!-- Dork List -->
+    <!-- Tab Content -->
     <div class="max-w-6xl mx-auto">
-        <div class="glass-effect cyber-border rounded-2xl p-8">
-            <div class="flex items-center justify-between mb-8">
-                <h2 class="text-2xl font-bold text-slate-200">🔍 Google Dorks Collection</h2>
-                <div class="flex gap-2">
-                    <button onclick="copyAllDorks()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 text-sm font-medium">
-                        Copy All
+        
+        <!-- Google Dorks Tab -->
+        <div id="google-dorks" class="tab-content">
+            <!-- Domain Input -->
+            <div class="max-w-2xl mx-auto mb-8">
+                <div class="glass-effect cyber-border rounded-2xl p-6">
+                    <label for="domainInput" class="block text-lg font-semibold mb-4 text-center text-slate-300">
+                        🎯 Target Domain
+                    </label>
+                    <div class="relative">
+                        <input
+                                type="text"
+                                id="domainInput"
+                                placeholder="example.com, subdomain.com"
+                                class="w-full px-6 py-4 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/25 transition-all duration-300"
+                                oninput="updateDomain()"
+                        >
+                        <div class="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-400 mt-3 text-center">
+                        💡 Separate multiple domains with commas
+                    </p>
+                </div>
+            </div>
+
+            <!-- Dork Generator Buttons -->
+            <div class="glass-effect cyber-border rounded-2xl p-6 mb-8">
+                <h3 class="text-xl font-semibold mb-4 text-center text-slate-200">🎛️ Quick Dork Generator</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <button onclick="generateDork('sensitive')" class="dork-btn bg-red-600/20 hover:bg-red-600/40 border-red-500/30">
+                        📁 Sensitive Files
                     </button>
-                    <button onclick="exportDorks()" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200 text-sm font-medium">
-                        Export
+                    <button onclick="generateDork('login')" class="dork-btn bg-blue-600/20 hover:bg-blue-600/40 border-blue-500/30">
+                        🔑 Login Pages
+                    </button>
+                    <button onclick="generateDork('config')" class="dork-btn bg-orange-600/20 hover:bg-orange-600/40 border-orange-500/30">
+                        ⚙️ Config Files
+                    </button>
+                    <button onclick="generateDork('sql')" class="dork-btn bg-purple-600/20 hover:bg-purple-600/40 border-purple-500/30">
+                        💾 SQL Errors
+                    </button>
+                    <button onclick="generateDork('admin')" class="dork-btn bg-green-600/20 hover:bg-green-600/40 border-green-500/30">
+                        👑 Admin Pages
+                    </button>
+                    <button onclick="generateDork('backup')" class="dork-btn bg-yellow-600/20 hover:bg-yellow-600/40 border-yellow-500/30">
+                        💾 Backup Files
+                    </button>
+                    <button onclick="generateDork('exposed')" class="dork-btn bg-pink-600/20 hover:bg-pink-600/40 border-pink-500/30">
+                        🔓 Exposed Dirs
+                    </button>
+                    <button onclick="generateDork('subdomain')" class="dork-btn bg-cyan-600/20 hover:bg-cyan-600/40 border-cyan-500/30">
+                        🌐 Subdomains
                     </button>
                 </div>
             </div>
 
-            <div class="space-y-4" id="dorkList">
-                <!-- Dorks will be loaded here -->
+            <!-- Generated Dork Display -->
+            <div id="generatedDork" class="glass-effect cyber-border rounded-2xl p-6 mb-8 hidden">
+                <h4 class="text-lg font-semibold mb-3 text-slate-200">Generated Dork:</h4>
+                <div class="bg-slate-800/50 rounded-lg p-4 mb-4">
+                    <code id="dorkOutput" class="text-green-400 font-mono text-sm break-all"></code>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="copyGeneratedDork()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-sm">
+                        📋 Copy
+                    </button>
+                    <button onclick="searchGeneratedDork()" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors text-sm">
+                        🔍 Search on Google
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Dashboard -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="glass-effect cyber-border rounded-xl p-6 text-center hover-lift">
+                    <div class="text-3xl font-bold text-blue-400 mb-2" id="totalDorks">0</div>
+                    <div class="text-slate-300">Total Dorks</div>
+                </div>
+                <div class="glass-effect cyber-border rounded-xl p-6 text-center hover-lift">
+                    <div class="text-3xl font-bold text-green-400 mb-2" id="categories">0</div>
+                    <div class="text-slate-300">Categories</div>
+                </div>
+                <div class="glass-effect cyber-border rounded-xl p-6 text-center hover-lift">
+                    <div class="text-3xl font-bold text-purple-400 mb-2">∞</div>
+                    <div class="text-slate-300">Possibilities</div>
+                </div>
+            </div>
+
+            <!-- Dork List -->
+            <div class="glass-effect cyber-border rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-2xl font-bold text-slate-200">🔍 Google Dorks Collection</h2>
+                    <div class="flex gap-2">
+                        <button onclick="copyAllDorks()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 text-sm font-medium">
+                            Copy All
+                        </button>
+                        <button onclick="exportDorks()" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200 text-sm font-medium">
+                            Export
+                        </button>
+                    </div>
+                </div>
+
+                <div class="space-y-4" id="dorkList">
+                    <!-- Dorks will be loaded here -->
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Additional Resources -->
-    <div class="max-w-4xl mx-auto mt-16">
-        <div class="glass-effect cyber-border rounded-2xl p-8">
-            <h2 class="text-2xl font-bold mb-6 text-center gradient-text">📚 Additional Resources</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <a href="https://github.com/TakSec/google-dorks-bug-bounty/" target="_blank"
-                   class="flex items-center p-4 bg-slate-800/50 rounded-lg hover:bg-slate-700/50 transition-all duration-300 hover-lift group">
-                    <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-500/30 transition-colors">
-                        <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
+        <!-- Recon Tools Tab -->
+        <div id="recon-tools" class="tab-content hidden">
+            <div class="glass-effect cyber-border rounded-2xl p-8">
+                <h2 class="text-2xl font-bold mb-8 text-center gradient-text">🕵️ Reconnaissance & OSINT Tools</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Search Engines -->
+                    <div class="tool-category">
+                        <h3 class="text-lg font-semibold mb-4 text-blue-400">🔍 Search Engines</h3>
+                        <div class="space-y-3">
+                            <a href="https://www.shodan.io/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-red-500/20">🌐</div>
+                                <div>
+                                    <h4>Shodan</h4>
+                                    <p>IoT & Network Device Search</p>
+                                </div>
+                            </a>
+                            <a href="https://censys.io/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-blue-500/20">📡</div>
+                                <div>
+                                    <h4>Censys</h4>
+                                    <p>Internet-wide Asset Discovery</p>
+                                </div>
+                            </a>
+                            <a href="https://www.zoomeye.org/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-orange-500/20">👁️</div>
+                                <div>
+                                    <h4>ZoomEye</h4>
+                                    <p>Cyberspace Search Engine</p>
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="font-semibold text-white group-hover:text-blue-300 transition-colors">Google Dorks Repository</h3>
-                        <p class="text-sm text-slate-400">Complete collection on GitHub</p>
-                    </div>
-                </a>
 
-                <a href="https://thegrayarea.tech/5-google-dorks-every-hacker-needs-to-know-fed21022a906" target="_blank"
-                   class="flex items-center p-4 bg-slate-800/50 rounded-lg hover:bg-slate-700/50 transition-all duration-300 hover-lift group">
-                    <div class="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center mr-4 group-hover:bg-green-500/30 transition-colors">
-                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                        </svg>
+                    <!-- Domain Intelligence -->
+                    <div class="tool-category">
+                        <h3 class="text-lg font-semibold mb-4 text-green-400">🏷️ Domain Intelligence</h3>
+                        <div class="space-y-3">
+                            <a href="https://crt.sh/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-green-500/20">🔒</div>
+                                <div>
+                                    <h4>crt.sh</h4>
+                                    <p>Certificate Transparency Search</p>
+                                </div>
+                            </a>
+                            <a href="https://dnsdumpster.com/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-purple-500/20">🗂️</div>
+                                <div>
+                                    <h4>DNSdumpster</h4>
+                                    <p>DNS Reconnaissance Tool</p>
+                                </div>
+                            </a>
+                            <a href="https://subdomainfinder.c99.nl/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-cyan-500/20">🌍</div>
+                                <div>
+                                    <h4>Subdomain Finder</h4>
+                                    <p>Discover Subdomains</p>
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="font-semibold text-white group-hover:text-green-300 transition-colors">Essential Dorks Guide</h3>
-                        <p class="text-sm text-slate-400">Must-know techniques</p>
+
+                    <!-- Email & Social -->
+                    <div class="tool-category">
+                        <h3 class="text-lg font-semibold mb-4 text-yellow-400">📧 Email & Social</h3>
+                        <div class="space-y-3">
+                            <a href="https://hunter.io/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-yellow-500/20">✉️</div>
+                                <div>
+                                    <h4>Hunter.io</h4>
+                                    <p>Email Address Discovery</p>
+                                </div>
+                            </a>
+                            <a href="https://haveibeenpwned.com/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-red-500/20">💥</div>
+                                <div>
+                                    <h4>Have I Been Pwned</h4>
+                                    <p>Data Breach Check</p>
+                                </div>
+                            </a>
+                            <a href="https://whatsmyname.app/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-pink-500/20">👤</div>
+                                <div>
+                                    <h4>WhatsMyName</h4>
+                                    <p>Username Search Across Sites</p>
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                </a>
+
+                    <!-- Web Archives -->
+                    <div class="tool-category">
+                        <h3 class="text-lg font-semibold mb-4 text-purple-400">📚 Web Archives</h3>
+                        <div class="space-y-3">
+                            <a href="https://web.archive.org/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-blue-500/20">🏛️</div>
+                                <div>
+                                    <h4>Wayback Machine</h4>
+                                    <p>Historical Web Pages</p>
+                                </div>
+                            </a>
+                            <a href="https://urlscan.io/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-green-500/20">🔍</div>
+                                <div>
+                                    <h4>URLScan.io</h4>
+                                    <p>Website Analysis & Scanning</p>
+                                </div>
+                            </a>
+                            <a href="https://archive.today/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-orange-500/20">📄</div>
+                                <div>
+                                    <h4>Archive.today</h4>
+                                    <p>Web Page Archiving</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Network Analysis -->
+                    <div class="tool-category">
+                        <h3 class="text-lg font-semibold mb-4 text-cyan-400">🌐 Network Analysis</h3>
+                        <div class="space-y-3">
+                            <a href="https://www.virustotal.com/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-red-500/20">🛡️</div>
+                                <div>
+                                    <h4>VirusTotal</h4>
+                                    <p>File & URL Security Analysis</p>
+                                </div>
+                            </a>
+                            <a href="https://securityheaders.com/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-green-500/20">🔐</div>
+                                <div>
+                                    <h4>Security Headers</h4>
+                                    <p>HTTP Security Header Analyzer</p>
+                                </div>
+                            </a>
+                            <a href="https://www.ssllabs.com/ssltest/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-blue-500/20">🔒</div>
+                                <div>
+                                    <h4>SSL Labs</h4>
+                                    <p>SSL Configuration Test</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Code Analysis -->
+                    <div class="tool-category">
+                        <h3 class="text-lg font-semibold mb-4 text-pink-400">💻 Code Analysis</h3>
+                        <div class="space-y-3">
+                            <a href="https://github.com/search" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-gray-500/20">🐙</div>
+                                <div>
+                                    <h4>GitHub Search</h4>
+                                    <p>Code Repository Search</p>
+                                </div>
+                            </a>
+                            <a href="https://grep.app/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-yellow-500/20">🔎</div>
+                                <div>
+                                    <h4>grep.app</h4>
+                                    <p>Search Code Across Repos</p>
+                                </div>
+                            </a>
+                            <a href="https://searchcode.com/" target="_blank" class="tool-link">
+                                <div class="tool-icon bg-purple-500/20">📝</div>
+                                <div>
+                                    <h4>SearchCode</h4>
+                                    <p>Source Code Search Engine</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payloads Tab -->
+        <div id="payloads" class="tab-content hidden">
+            <div class="space-y-8">
+                <!-- URL Input for Parameter Testing -->
+                <div class="glass-effect cyber-border rounded-2xl p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-center text-slate-200">🎯 Target URL</h3>
+                    <div class="max-w-2xl mx-auto">
+                        <input
+                            type="text"
+                            id="targetUrl"
+                            placeholder="https://example.com/page"
+                            class="w-full px-6 py-4 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/25 transition-all duration-300"
+                        >
+                    </div>
+                </div>
+
+                <!-- Parameter Buttons -->
+                <div class="glass-effect cyber-border rounded-2xl p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-slate-200">🔗 Quick Parameters</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                        <button onclick="addParameter('id=1')" class="param-btn">?id=1</button>
+                        <button onclick="addParameter('q=test')" class="param-btn">?q=test</button>
+                        <button onclick="addParameter('page=admin')" class="param-btn">?page=admin</button>
+                        <button onclick="addParameter('user=admin')" class="param-btn">?user=admin</button>
+                        <button onclick="addParameter('search=query')" class="param-btn">?search=query</button>
+                        <button onclick="addParameter('file=index')" class="param-btn">?file=index</button>
+                        <button onclick="addParameter('debug=true')" class="param-btn">?debug=true</button>
+                        <button onclick="addParameter('admin=1')" class="param-btn">?admin=1</button>
+                        <button onclick="addParameter('test=1')" class="param-btn">?test=1</button>
+                        <button onclick="addParameter('action=view')" class="param-btn">?action=view</button>
+                        <button onclick="addParameter('mode=edit')" class="param-btn">?mode=edit</button>
+                        <button onclick="addParameter('lang=en')" class="param-btn">?lang=en</button>
+                    </div>
+                </div>
+
+                <!-- Payload Collections -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- XSS Payloads -->
+                    <div class="glass-effect cyber-border rounded-2xl p-6">
+                        <h3 class="text-xl font-semibold mb-4 text-red-400">⚡ XSS Payloads</h3>
+                        <div class="space-y-3 max-h-80 overflow-y-auto">
+                            <div class="payload-item" onclick="copyPayload('<script>alert(1)</script>')">
+                                <code>&lt;script&gt;alert(1)&lt;/script&gt;</code>
+                            </div>
+                            <div class="payload-item" onclick="copyPayload('&quot;&gt;&lt;img src=x onerror=alert(1)&gt;')">
+                                <code>"&gt;&lt;img src=x onerror=alert(1)&gt;</code>
+                            </div>
+                            <div class="payload-item" onclick="copyPayload('javascript:alert(1)')">
+                                <code>javascript:alert(1)</code>
+                            </div>
+                            <div class="payload-item" onclick="copyPayload('&lt;svg onload=alert(1)&gt;')">
+                                <code>&lt;svg onload=alert(1)&gt;</code>
+                            </div>
+                            <div class="payload-item" onclick="copyPayload('&lt;iframe src=javascript:alert(1)&gt;')">
+                                <code>&lt;iframe src=javascript:alert(1)&gt;</code>
+                            </div>
+                            <div class="payload-item" onclick="copyPayload('&lt;img src=&quot;&quot; onerror=alert(1)&gt;')">
+                                <code>&lt;img src="" onerror=alert(1)&gt;</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SQL Injection Payloads -->
+                    <div class="glass-effect cyber-border rounded-2xl p-6">
+                        <h3 class="text-xl font-semibold mb-4 text-purple-400">💉 SQL Injection</h3>
+                        <div class="space-y-3 max-h-80 overflow-y-auto">
+                            <div class="payload-item" onclick="copyPayload(&quot;' OR 1=1--&quot;)">
+                                <code>' OR 1=1--</code>
+                            </div>
+                            <div class="payload-item" onclick="copyPayload('&quot; OR &quot;a&quot;=&quot;a')">
+                                <code>" OR "a"="a</code>
+                            </div>
+                            <div class="payload-item" onclick="copyPayload('1; DROP TABLE users--')">
+                                <code>1; DROP TABLE users--</code>
+                            </div>
+                            <div class="payload-item" onclick="copyPayload('admin&apos;--')">
+                                <code>admin'--</code>
+                            </div>
+                            <div class="payload-item" onclick="copyPayload('1&apos; UNION SELECT NULL--')">
+                                <code>1' UNION SELECT NULL--</code>
+                            </div>
+                            <div class="payload-item" onclick="copyPayload('1&apos; AND 1=1--')">
+                                <code>1' AND 1=1--</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wordlists & Collections -->
+                <div class="glass-effect cyber-border rounded-2xl p-6">
+                    <h2 class="text-xl font-semibold mb-6 text-center gradient-text">📚 Wordlists & Payload Collections</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <a href="https://github.com/danielmiessler/SecLists" target="_blank" class="wordlist-link">
+                            <div class="tool-icon bg-blue-500/20">📋</div>
+                            <div>
+                                <h4>SecLists</h4>
+                                <p>Security Tester's Companion</p>
+                            </div>
+                        </a>
+                        <a href="https://github.com/fuzzdb-project/fuzzdb" target="_blank" class="wordlist-link">
+                            <div class="tool-icon bg-green-500/20">🎯</div>
+                            <div>
+                                <h4>FuzzDB</h4>
+                                <p>Attack Patterns & Primitives</p>
+                            </div>
+                        </a>
+                        <a href="https://github.com/swisskyrepo/PayloadsAllTheThings" target="_blank" class="wordlist-link">
+                            <div class="tool-icon bg-red-500/20">💣</div>
+                            <div>
+                                <h4>PayloadsAllTheThings</h4>
+                                <p>Web App Security Payloads</p>
+                            </div>
+                        </a>
+                        <a href="https://github.com/projectdiscovery/nuclei-templates" target="_blank" class="wordlist-link">
+                            <div class="tool-icon bg-purple-500/20">🔬</div>
+                            <div>
+                                <h4>Nuclei Templates</h4>
+                                <p>Vulnerability Scan Templates</p>
+                            </div>
+                        </a>
+                        <a href="https://github.com/OWASP/wfuzz" target="_blank" class="wordlist-link">
+                            <div class="tool-icon bg-orange-500/20">🌊</div>
+                            <div>
+                                <h4>Wfuzz</h4>
+                                <p>Web Application Fuzzer</p>
+                            </div>
+                        </a>
+                        <a href="https://github.com/Bo0oM/PHP_imap_open_exploit" target="_blank" class="wordlist-link">
+                            <div class="tool-icon bg-cyan-500/20">📧</div>
+                            <div>
+                                <h4>Exploit Collections</h4>
+                                <p>Ready-to-use Exploits</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Encoders Tab -->
+        <div id="encoders" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Base64 Encoder/Decoder -->
+                <div class="glass-effect cyber-border rounded-2xl p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-400">🔤 Base64 Encoder/Decoder</h3>
+                    <div class="space-y-4">
+                        <textarea
+                            id="base64Input"
+                            placeholder="Enter text to encode/decode..."
+                            class="w-full h-32 px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 resize-none"
+                        ></textarea>
+                        <div class="flex gap-2">
+                            <button onclick="base64Encode()" class="flex-1 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">Encode</button>
+                            <button onclick="base64Decode()" class="flex-1 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors">Decode</button>
+                        </div>
+                        <textarea
+                            id="base64Output"
+                            readonly
+                            placeholder="Result will appear here..."
+                            class="w-full h-32 px-4 py-3 bg-slate-800/30 border border-slate-600 rounded-lg text-green-400 placeholder-slate-500 resize-none"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <!-- URL Encoder/Decoder -->
+                <div class="glass-effect cyber-border rounded-2xl p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-green-400">🔗 URL Encoder/Decoder</h3>
+                    <div class="space-y-4">
+                        <textarea
+                            id="urlInput"
+                            placeholder="Enter URL to encode/decode..."
+                            class="w-full h-32 px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-green-500 resize-none"
+                        ></textarea>
+                        <div class="flex gap-2">
+                            <button onclick="urlEncode()" class="flex-1 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors">Encode</button>
+                            <button onclick="urlDecode()" class="flex-1 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">Decode</button>
+                        </div>
+                        <textarea
+                            id="urlOutput"
+                            readonly
+                            placeholder="Result will appear here..."
+                            class="w-full h-32 px-4 py-3 bg-slate-800/30 border border-slate-600 rounded-lg text-green-400 placeholder-slate-500 resize-none"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <!-- Hash Generator -->
+                <div class="glass-effect cyber-border rounded-2xl p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-purple-400">🔐 Hash Generator</h3>
+                    <div class="space-y-4">
+                        <textarea
+                            id="hashInput"
+                            placeholder="Enter text to hash..."
+                            class="w-full h-32 px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 resize-none"
+                        ></textarea>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="generateHash('md5')" class="py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors text-sm">MD5</button>
+                            <button onclick="generateHash('sha1')" class="py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors text-sm">SHA1</button>
+                            <button onclick="generateHash('sha256')" class="py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors text-sm">SHA256</button>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="text-sm text-slate-300">MD5:</div>
+                            <input id="md5Output" readonly class="w-full px-3 py-2 bg-slate-800/30 border border-slate-600 rounded text-green-400 text-sm font-mono">
+                            <div class="text-sm text-slate-300">SHA1:</div>
+                            <input id="sha1Output" readonly class="w-full px-3 py-2 bg-slate-800/30 border border-slate-600 rounded text-green-400 text-sm font-mono">
+                            <div class="text-sm text-slate-300">SHA256:</div>
+                            <input id="sha256Output" readonly class="w-full px-3 py-2 bg-slate-800/30 border border-slate-600 rounded text-green-400 text-sm font-mono">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HTTP Header Checker -->
+                <div class="glass-effect cyber-border rounded-2xl p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-cyan-400">🌐 HTTP Header Checker</h3>
+                    <div class="space-y-4">
+                        <input
+                            type="url"
+                            id="headerUrl"
+                            placeholder="https://example.com"
+                            class="w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+                        >
+                        <button onclick="checkHeaders()" class="w-full py-3 bg-cyan-600 hover:bg-cyan-700 rounded-lg transition-colors">
+                            Check Headers
+                        </button>
+                        <div id="headerResults" class="bg-slate-800/30 border border-slate-600 rounded-lg p-4 min-h-32 text-sm font-mono text-green-400">
+                            <div class="text-slate-400">Headers will appear here...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vulnerability Database Tab -->
+        <div id="vuln-db" class="tab-content hidden">
+            <div class="glass-effect cyber-border rounded-2xl p-8">
+                <h2 class="text-2xl font-bold mb-8 text-center gradient-text">🗄️ Vulnerability Databases</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Exploit Databases -->
+                    <div class="vuln-category">
+                        <h3 class="text-lg font-semibold mb-4 text-red-400">💥 Exploit Databases</h3>
+                        <div class="space-y-3">
+                            <a href="https://www.exploit-db.com/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-red-500/20">💣</div>
+                                <div>
+                                    <h4>Exploit-DB</h4>
+                                    <p>Exploits & Shellcodes Archive</p>
+                                </div>
+                            </a>
+                            <a href="https://packetstormsecurity.com/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-orange-500/20">📦</div>
+                                <div>
+                                    <h4>Packet Storm</h4>
+                                    <p>Security Tools & Exploits</p>
+                                </div>
+                            </a>
+                            <a href="https://sploitus.com/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-purple-500/20">🔍</div>
+                                <div>
+                                    <h4>Sploitus</h4>
+                                    <p>Exploit & Vulnerability Search</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- CVE Databases -->
+                    <div class="vuln-category">
+                        <h3 class="text-lg font-semibold mb-4 text-blue-400">🆔 CVE Databases</h3>
+                        <div class="space-y-3">
+                            <a href="https://nvd.nist.gov/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-blue-500/20">🏛️</div>
+                                <div>
+                                    <h4>NVD (NIST)</h4>
+                                    <p>National Vulnerability Database</p>
+                                </div>
+                            </a>
+                            <a href="https://cve.mitre.org/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-green-500/20">🎯</div>
+                                <div>
+                                    <h4>CVE MITRE</h4>
+                                    <p>Common Vulnerabilities Database</p>
+                                </div>
+                            </a>
+                            <a href="https://www.cvedetails.com/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-cyan-500/20">📊</div>
+                                <div>
+                                    <h4>CVE Details</h4>
+                                    <p>Vulnerability Statistics & Info</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Security Advisories -->
+                    <div class="vuln-category">
+                        <h3 class="text-lg font-semibold mb-4 text-green-400">📢 Security Advisories</h3>
+                        <div class="space-y-3">
+                            <a href="https://www.rapid7.com/db/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-red-500/20">⚡</div>
+                                <div>
+                                    <h4>Rapid7 VulnDB</h4>
+                                    <p>Vulnerability Intelligence</p>
+                                </div>
+                            </a>
+                            <a href="https://vuldb.com/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-yellow-500/20">🗃️</div>
+                                <div>
+                                    <h4>VulDB</h4>
+                                    <p>Vulnerability Database</p>
+                                </div>
+                            </a>
+                            <a href="https://security.snyk.io/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-purple-500/20">🛡️</div>
+                                <div>
+                                    <h4>Snyk Vulnerability DB</h4>
+                                    <p>Open Source Vulnerabilities</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Bug Bounty Platforms -->
+                    <div class="vuln-category">
+                        <h3 class="text-lg font-semibold mb-4 text-yellow-400">💰 Bug Bounty Platforms</h3>
+                        <div class="space-y-3">
+                            <a href="https://hackerone.com/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-green-500/20">🎯</div>
+                                <div>
+                                    <h4>HackerOne</h4>
+                                    <p>Bug Bounty Platform</p>
+                                </div>
+                            </a>
+                            <a href="https://bugcrowd.com/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-orange-500/20">🐛</div>
+                                <div>
+                                    <h4>Bugcrowd</h4>
+                                    <p>Crowdsourced Security</p>
+                                </div>
+                            </a>
+                            <a href="https://www.intigriti.com/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-blue-500/20">🔒</div>
+                                <div>
+                                    <h4>Intigriti</h4>
+                                    <p>Bug Bounty & Vulnerability Disclosure</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Research & Intelligence -->
+                    <div class="vuln-category">
+                        <h3 class="text-lg font-semibold mb-4 text-purple-400">🔬 Research & Intelligence</h3>
+                        <div class="space-y-3">
+                            <a href="https://attack.mitre.org/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-red-500/20">⚔️</div>
+                                <div>
+                                    <h4>MITRE ATT&CK</h4>
+                                    <p>Adversary Tactics & Techniques</p>
+                                </div>
+                            </a>
+                            <a href="https://owasp.org/www-project-top-ten/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-orange-500/20">🔟</div>
+                                <div>
+                                    <h4>OWASP Top 10</h4>
+                                    <p>Web App Security Risks</p>
+                                </div>
+                            </a>
+                            <a href="https://cwe.mitre.org/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-purple-500/20">⚠️</div>
+                                <div>
+                                    <h4>CWE List</h4>
+                                    <p>Common Weakness Enumeration</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Security -->
+                    <div class="vuln-category">
+                        <h3 class="text-lg font-semibold mb-4 text-pink-400">📱 Mobile Security</h3>
+                        <div class="space-y-3">
+                            <a href="https://owasp.org/www-project-mobile-top-10/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-pink-500/20">📱</div>
+                                <div>
+                                    <h4>OWASP Mobile Top 10</h4>
+                                    <p>Mobile Security Risks</p>
+                                </div>
+                            </a>
+                            <a href="https://github.com/OWASP/owasp-mstg" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-cyan-500/20">📚</div>
+                                <div>
+                                    <h4>Mobile Security Testing Guide</h4>
+                                    <p>Comprehensive Mobile Security</p>
+                                </div>
+                            </a>
+                            <a href="https://mas.owasp.org/" target="_blank" class="vuln-link">
+                                <div class="tool-icon bg-green-500/20">🔐</div>
+                                <div>
+                                    <h4>Mobile App Security</h4>
+                                    <p>Mobile Security Verification Standard</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -191,7 +916,203 @@
 <script>
     let originalDorks = [];
     let categories = new Set();
+    let currentGeneratedDork = '';
 
+    // Tab Management
+    function showTab(tabName) {
+        // Hide all tabs
+        const tabs = document.querySelectorAll('.tab-content');
+        tabs.forEach(tab => tab.classList.add('hidden'));
+        
+        // Remove active class from all buttons
+        const buttons = document.querySelectorAll('.tab-button');
+        buttons.forEach(button => button.classList.remove('active'));
+        
+        // Show selected tab
+        document.getElementById(tabName).classList.remove('hidden');
+        document.getElementById(`tab-${tabName}`).classList.add('active');
+    }
+
+    // Dork Generator Functions
+    const dorkTemplates = {
+        sensitive: 'site:{domain} intitle:"index of" password',
+        login: 'site:{domain} inurl:login',
+        config: 'site:{domain} (ext:json | ext:yaml | ext:env | ext:xml | ext:conf)',
+        sql: 'site:{domain} "sql syntax near" | "mysql_fetch_row()" | "mysqli_fetch_assoc"',
+        admin: 'site:{domain} inurl:admin | inurl:administrator | inurl:wp-admin',
+        backup: 'site:{domain} (ext:sql | ext:bak | ext:backup | ext:old)',
+        exposed: 'site:{domain} intitle:"directory listing" | intitle:"index of /"',
+        subdomain: 'site:*.{domain} -www'
+    };
+
+    function generateDork(type) {
+        const domainInput = document.getElementById('domainInput').value.trim();
+        const domains = domainInput ? domainInput.split(',').map(d => d.trim()).filter(d => d) : ['example.com'];
+        
+        let template = dorkTemplates[type];
+        if (!template) return;
+        
+        // Generate dork for each domain
+        const dorks = domains.map(domain => template.replace(/{domain}/g, domain));
+        currentGeneratedDork = dorks.join(' | ');
+        
+        // Display generated dork
+        const dorkContainer = document.getElementById('generatedDork');
+        const dorkOutput = document.getElementById('dorkOutput');
+        
+        dorkOutput.textContent = currentGeneratedDork;
+        dorkContainer.classList.remove('hidden');
+        
+        // Animate
+        dorkContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function copyGeneratedDork() {
+        navigator.clipboard.writeText(currentGeneratedDork).then(() => {
+            showNotification('Generated dork copied to clipboard!', 'success');
+        }).catch(() => {
+            showNotification('Failed to copy dork', 'error');
+        });
+    }
+
+    function searchGeneratedDork() {
+        if (currentGeneratedDork) {
+            const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(currentGeneratedDork)}`;
+            window.open(googleUrl, '_blank');
+        }
+    }
+
+    // Parameter Functions
+    function addParameter(param) {
+        const targetUrl = document.getElementById('targetUrl');
+        let url = targetUrl.value.trim();
+        
+        if (!url) {
+            url = 'https://example.com';
+        }
+        
+        const separator = url.includes('?') ? '&' : '?';
+        targetUrl.value = url + separator + param;
+        
+        showNotification('Parameter added to URL!', 'success');
+    }
+
+    // Payload Functions
+    function copyPayload(payload) {
+        // Decode HTML entities
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = payload;
+        const decodedPayload = textarea.value;
+        
+        navigator.clipboard.writeText(decodedPayload).then(() => {
+            showNotification('Payload copied to clipboard!', 'success');
+        }).catch(() => {
+            showNotification('Failed to copy payload', 'error');
+        });
+    }
+
+    // Encoder Functions
+    function base64Encode() {
+        const input = document.getElementById('base64Input').value;
+        try {
+            const encoded = btoa(unescape(encodeURIComponent(input)));
+            document.getElementById('base64Output').value = encoded;
+        } catch (e) {
+            showNotification('Encoding failed', 'error');
+        }
+    }
+
+    function base64Decode() {
+        const input = document.getElementById('base64Input').value;
+        try {
+            const decoded = decodeURIComponent(escape(atob(input)));
+            document.getElementById('base64Output').value = decoded;
+        } catch (e) {
+            showNotification('Decoding failed', 'error');
+        }
+    }
+
+    function urlEncode() {
+        const input = document.getElementById('urlInput').value;
+        const encoded = encodeURIComponent(input);
+        document.getElementById('urlOutput').value = encoded;
+    }
+
+    function urlDecode() {
+        const input = document.getElementById('urlInput').value;
+        try {
+            const decoded = decodeURIComponent(input);
+            document.getElementById('urlOutput').value = decoded;
+        } catch (e) {
+            showNotification('URL decoding failed', 'error');
+        }
+    }
+
+    async function generateHash(type) {
+        const input = document.getElementById('hashInput').value;
+        if (!input) return;
+
+        try {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(input);
+            
+            let hashBuffer;
+            switch (type) {
+                case 'sha1':
+                    hashBuffer = await crypto.subtle.digest('SHA-1', data);
+                    break;
+                case 'sha256':
+                    hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                    break;
+                case 'md5':
+                    // MD5 not available in Web Crypto API, use simple alternative
+                    showNotification('MD5 not available in browser', 'error');
+                    return;
+                default:
+                    return;
+            }
+            
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            
+            if (type === 'sha1') {
+                document.getElementById('sha1Output').value = hashHex;
+            } else if (type === 'sha256') {
+                document.getElementById('sha256Output').value = hashHex;
+            }
+        } catch (e) {
+            showNotification(`${type.toUpperCase()} generation failed`, 'error');
+        }
+    }
+
+    async function checkHeaders() {
+        const url = document.getElementById('headerUrl').value.trim();
+        const resultsDiv = document.getElementById('headerResults');
+        
+        if (!url) {
+            showNotification('Please enter a URL', 'error');
+            return;
+        }
+        
+        resultsDiv.innerHTML = '<div class="text-slate-400">Checking headers...</div>';
+        
+        try {
+            // Note: Due to CORS limitations, this might not work for all URLs
+            const response = await fetch(url, { method: 'HEAD', mode: 'cors' });
+            
+            let headerText = `Status: ${response.status} ${response.statusText}\n\n`;
+            
+            for (const [key, value] of response.headers.entries()) {
+                headerText += `${key}: ${value}\n`;
+            }
+            
+            resultsDiv.innerHTML = `<pre class="whitespace-pre-wrap">${headerText}</pre>`;
+        } catch (error) {
+            resultsDiv.innerHTML = `<div class="text-red-400">Error: ${error.message}\n\nNote: CORS policy may prevent checking external sites.</div>`;
+        }
+    }
+
+    // Original Google Dorks Functions
     async function fetchDorks() {
         try {
             const url = "https://raw.githubusercontent.com/TakSec/google-dorks-bug-bounty/main/README.md";
