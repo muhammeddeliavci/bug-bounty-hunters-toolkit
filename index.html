@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Dorks for Bug Bounty</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 20px #3b82f6' },
+                            '100%': { boxShadow: '0 0 30px #8b5cf6, 0 0 40px #3b82f6' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .cyber-border {
+            border: 1px solid transparent;
+            background: linear-gradient(45deg, #1f2937, #374151) padding-box,
+            linear-gradient(45deg, #3b82f6, #8b5cf6, #06b6d4) border-box;
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(17, 24, 39, 0.8);
+        }
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen font-inter text-white">
+<!-- Background Pattern -->
+<div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23374151" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+
+<div class="relative z-10 container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="text-center mb-12 animate-fade-in">
+        <h1 class="text-6xl font-bold mb-6 gradient-text">
+            Google Dorks
+        </h1>
+        <p class="text-2xl text-slate-300 mb-4">Bug Bounty Hunter's Toolkit</p>
+        <div class="w-32 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
+    </div>
+
+    <!-- Social Links -->
+    <div class="flex justify-center gap-6 mb-12 animate-slide-up">
+        <a href="https://github.com/muhammeddeliavci" target="_blank"
+           class="glass-effect cyber-border px-6 py-3 rounded-lg hover-lift hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 group">
+            <span class="text-purple-400 group-hover:text-purple-300">📚 GitHub</span>
+        </a>
+    </div>
+
+    <!-- Domain Input -->
+    <div class="max-w-2xl mx-auto mb-12 animate-slide-up">
+        <div class="glass-effect cyber-border rounded-2xl p-8">
+            <label for="domainInput" class="block text-lg font-semibold mb-4 text-center text-slate-300">
+                🎯 Target Domain
+            </label>
+            <div class="relative">
+                <input
+                        type="text"
+                        id="domainInput"
+                        placeholder="example.com, subdomain.com"
+                        class="w-full px-6 py-4 bg-slate-800/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/25 transition-all duration-300"
+                        oninput="updateDomain()"
+                >
+                <div class="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+            </div>
+            <p class="text-sm text-slate-400 mt-3 text-center">
+                💡 Separate multiple domains with commas
+            </p>
+        </div>
+    </div>
+
+    <!-- Stats Dashboard -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto animate-slide-up">
+        <div class="glass-effect cyber-border rounded-xl p-6 text-center hover-lift">
+            <div class="text-3xl font-bold text-blue-400 mb-2" id="totalDorks">0</div>
+            <div class="text-slate-300">Total Dorks</div>
+        </div>
+        <div class="glass-effect cyber-border rounded-xl p-6 text-center hover-lift">
+            <div class="text-3xl font-bold text-green-400 mb-2" id="categories">0</div>
+            <div class="text-slate-300">Categories</div>
+        </div>
+        <div class="glass-effect cyber-border rounded-xl p-6 text-center hover-lift">
+            <div class="text-3xl font-bold text-purple-400 mb-2">∞</div>
+            <div class="text-slate-300">Possibilities</div>
+        </div>
+    </div>
+
+    <!-- Dork List -->
+    <div class="max-w-6xl mx-auto">
+        <div class="glass-effect cyber-border rounded-2xl p-8">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-bold text-slate-200">🔍 Google Dorks Collection</h2>
+                <div class="flex gap-2">
+                    <button onclick="copyAllDorks()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 text-sm font-medium">
+                        Copy All
+                    </button>
+                    <button onclick="exportDorks()" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200 text-sm font-medium">
+                        Export
+                    </button>
+                </div>
+            </div>
+
+            <div class="space-y-4" id="dorkList">
+                <!-- Dorks will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Resources -->
+    <div class="max-w-4xl mx-auto mt-16">
+        <div class="glass-effect cyber-border rounded-2xl p-8">
+            <h2 class="text-2xl font-bold mb-6 text-center gradient-text">📚 Additional Resources</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <a href="https://github.com/TakSec/google-dorks-bug-bounty/" target="_blank"
+                   class="flex items-center p-4 bg-slate-800/50 rounded-lg hover:bg-slate-700/50 transition-all duration-300 hover-lift group">
+                    <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-500/30 transition-colors">
+                        <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-white group-hover:text-blue-300 transition-colors">Google Dorks Repository</h3>
+                        <p class="text-sm text-slate-400">Complete collection on GitHub</p>
+                    </div>
+                </a>
+
+                <a href="https://thegrayarea.tech/5-google-dorks-every-hacker-needs-to-know-fed21022a906" target="_blank"
+                   class="flex items-center p-4 bg-slate-800/50 rounded-lg hover:bg-slate-700/50 transition-all duration-300 hover-lift group">
+                    <div class="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center mr-4 group-hover:bg-green-500/30 transition-colors">
+                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-white group-hover:text-green-300 transition-colors">Essential Dorks Guide</h3>
+                        <p class="text-sm text-slate-400">Must-know techniques</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Spinner -->
+<div id="loading" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50">
+    <div class="glass-effect cyber-border rounded-2xl p-8 text-center">
+        <div class="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+        <p class="text-slate-300">Loading Google Dorks...</p>
+    </div>
+</div>
+
+<script>
+    let originalDorks = [];
+    let categories = new Set();
+
+    async function fetchDorks() {
+        try {
+            const url = "https://raw.githubusercontent.com/TakSec/google-dorks-bug-bounty/main/README.md";
+            const response = await fetch(url);
+            const text = await response.text();
+
+            const dorkList = document.getElementById("dorkList");
+            const regex = /(?:^### (.+)|```([^`]+)```)/gm;
+            let match;
+            let currentCategory = '';
+            let categoryContainer = null;
+
+            while ((match = regex.exec(text)) !== null) {
+                if (match[1]) {
+                    // Title match
+                    currentCategory = match[1];
+                    categories.add(currentCategory);
+
+                    // Create category section
+                    categoryContainer = createCategorySection(currentCategory);
+                    dorkList.appendChild(categoryContainer);
+                } else if (match[2]) {
+                    // Dork match
+                    const dork = match[2].trim();
+                    originalDorks.push(dork);
+                    const dorkItem = createDorkItem(dork, currentCategory);
+
+                    if (categoryContainer) {
+                        const dorksContainer = categoryContainer.querySelector('.dorks-container');
+                        dorksContainer.appendChild(dorkItem);
+                    }
+                }
+            }
+
+            updateStats();
+            hideLoading();
+        } catch (error) {
+            console.error('Error fetching dorks:', error);
+            hideLoading();
+            showError();
+        }
+    }
+
+    function createCategorySection(category) {
+        const section = document.createElement('div');
+        section.className = 'mb-8 animate-slide-up';
+        section.innerHTML = `
+                <div class="flex items-center mb-4">
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
+                        <span class="text-white font-bold text-sm">${categories.size}</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-200">${category}</h3>
+                    <div class="flex-1 h-px bg-gradient-to-r from-slate-600 to-transparent ml-4"></div>
+                </div>
+                <div class="dorks-container space-y-3"></div>
+            `;
+        return section;
+    }
+
+    function createDorkItem(dork, category) {
+        const item = document.createElement('div');
+        item.className = 'group relative bg-slate-800/30 hover:bg-slate-700/40 rounded-lg p-4 transition-all duration-300 hover-lift border border-slate-700/50 hover:border-slate-600';
+
+        const googleLink = `https://www.google.com/search?q=${encodeURIComponent(dork)}`;
+
+        item.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex-1 mr-4">
+                        <code class="text-green-400 font-mono text-sm break-all">${escapeHtml(dork)}</code>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="copyDork('${escapeHtml(dork)}')"
+                                class="opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-slate-600 rounded-lg"
+                                title="Copy dork">
+                            <svg class="w-4 h-4 text-slate-400 hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                            </svg>
+                        </button>
+                        <a href="${googleLink}" target="_blank"
+                           class="flex items-center px-3 py-1 bg-blue-600/20 hover:bg-blue-600/40 rounded-lg transition-colors text-sm font-medium text-blue-300 hover:text-blue-200 dork-link">
+                            Search
+                        </a>
+                    </div>
+                </div>
+            `;
+
+        return item;
+    }
+
+    function updateDomain() {
+        const domainInput = document.getElementById("domainInput");
+        const domains = domainInput.value.split(",").map(domain => domain.trim()).filter(d => d);
+
+        if (domains.length === 0) return;
+
+        const dorkLinks = document.querySelectorAll(".dork-link");
+        const dorkCodes = document.querySelectorAll("code");
+
+        dorkLinks.forEach((link, index) => {
+            if (index >= originalDorks.length) return;
+
+            let originalDork = originalDorks[index];
+
+            // Skip Drupal related dorks
+            if (originalDork.includes("Drupal")) {
+                return;
+            }
+
+            let updatedDork = originalDork;
+
+            // Handle different patterns
+            if (/site:"?example\[?\.\]?com"?/i.test(updatedDork)) {
+                const joinedDomains = domains.map(d => `site:${d}`).join(" | ");
+                updatedDork = updatedDork.replace(/site:"?example\[?\.\]?com"?/gi, joinedDomains);
+            }
+            else if (/["']example\[?\.\]?com["']/i.test(updatedDork)) {
+                const joinedDomains = domains.map(d => `"${d}"`).join(" | ");
+                updatedDork = updatedDork.replace(/["']example\[?\.\]?com["']/gi, joinedDomains);
+            }
+
+            const updatedLink = `https://www.google.com/search?q=${encodeURIComponent(updatedDork)}`;
+            link.href = updatedLink;
+
+            // Update the displayed dork text
+            if (dorkCodes[index]) {
+                dorkCodes[index].textContent = updatedDork;
+            }
+        });
+    }
+
+    function copyDork(dork) {
+        navigator.clipboard.writeText(dork).then(() => {
+            showNotification('Dork copied to clipboard!', 'success');
+        }).catch(() => {
+            showNotification('Failed to copy dork', 'error');
+        });
+    }
+
+    function copyAllDorks() {
+        const allDorks = originalDorks.join('\n');
+        navigator.clipboard.writeText(allDorks).then(() => {
+            showNotification('All dorks copied to clipboard!', 'success');
+        }).catch(() => {
+            showNotification('Failed to copy dorks', 'error');
+        });
+    }
+
+    function exportDorks() {
+        const allDorks = originalDorks.join('\n');
+        const blob = new Blob([allDorks], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'google-dorks.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showNotification('Dorks exported successfully!', 'success');
+    }
+
+    function updateStats() {
+        document.getElementById('totalDorks').textContent = originalDorks.length;
+        document.getElementById('categories').textContent = categories.size;
+    }
+
+    function hideLoading() {
+        document.getElementById('loading').style.display = 'none';
+    }
+
+    function showError() {
+        const dorkList = document.getElementById("dorkList");
+        dorkList.innerHTML = `
+                <div class="text-center py-12">
+                    <div class="text-6xl mb-4">😞</div>
+                    <h3 class="text-xl font-semibold text-slate-300 mb-2">Oops! Something went wrong</h3>
+                    <p class="text-slate-400">Failed to load Google Dorks. Please try again later.</p>
+                    <button onclick="location.reload()" class="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                        Retry
+                    </button>
+                </div>
+            `;
+    }
+
+    function showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg text-white font-medium animate-slide-up ${
+            type === 'success' ? 'bg-green-600' : 'bg-red-600'
+        }`;
+        notification.textContent = message;
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Initialize
+    fetchDorks();
+
+    // Smooth scrolling
+    document.documentElement.style.scrollBehavior = 'smooth';
+</script>
+</body>
+</html>
