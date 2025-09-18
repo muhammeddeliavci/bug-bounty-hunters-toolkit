@@ -1,0 +1,94 @@
+{
+    "name": "Bug Bounty Hunter's Toolkit",
+    "short_name": "BugBounty Toolkit",
+    "description": "Comprehensive security testing toolkit with Google Dorks, OSINT tools, payload generators, and encoding utilities for ethical hackers and penetration testers.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#1e293b",
+    "theme_color": "#1e293b",
+    "orientation": "any",
+    "scope": "/",
+    "lang": "en",
+    "dir": "ltr",
+    "categories": ["security", "tools", "utilities", "developer"],
+    "screenshots": [
+        {
+            "src": "/screenshot-wide.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Bug Bounty Toolkit - Desktop View"
+        },
+        {
+            "src": "/screenshot-narrow.png",
+            "sizes": "640x1136",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Bug Bounty Toolkit - Mobile View"
+        }
+    ],
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Google Dorks",
+            "short_name": "Dorks",
+            "description": "Generate Google Dorks for security reconnaissance",
+            "url": "/?tab=google-dorks",
+            "icons": [{ "src": "/shortcut-dorks.png", "sizes": "96x96" }]
+        },
+        {
+            "name": "OSINT Tools",
+            "short_name": "OSINT",
+            "description": "Open Source Intelligence tools collection",
+            "url": "/?tab=recon-tools",
+            "icons": [{ "src": "/shortcut-osint.png", "sizes": "96x96" }]
+        },
+        {
+            "name": "Payload Generator",
+            "short_name": "Payloads",
+            "description": "Generate XSS and SQL injection payloads",
+            "url": "/?tab=payloads",
+            "icons": [{ "src": "/shortcut-payloads.png", "sizes": "96x96" }]
+        },
+        {
+            "name": "Encoding Tools",
+            "short_name": "Encoders",
+            "description": "Multi-format encoding and decoding utilities",
+            "url": "/?tab=encoders",
+            "icons": [{ "src": "/shortcut-encoders.png", "sizes": "96x96" }]
+        }
+    ],
+    "related_applications": [],
+    "prefer_related_applications": false
+}
